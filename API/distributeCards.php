@@ -45,7 +45,13 @@ if ($result->num_rows > 0) {
 // Check if is dealer
 if ($isDealer === 0) {
     http_response_code(401);
-    die("This player is not a dealer, it cannot distribute cards");
+    die("This player is not a dealer, he cannot distribute cards");
+}
+
+// Game is ON
+$query = "UPDATE rooms SET gameOn = 1 WHERE ID = $roomID";
+if (!$sql->query($query)) {
+    die("Error: " . $query . " " . $sql->error . "\n");
 }
 
 // Get other players IDs
@@ -81,6 +87,8 @@ while ($resArr = $result->fetch_assoc()) {
         }
     }
 }
+
+
 
 echo "DONE";
 
