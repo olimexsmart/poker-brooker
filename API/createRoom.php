@@ -24,10 +24,10 @@ for ($i = 0; $i < 5; $i++) {
 $query = "INSERT INTO rooms (ID, code, nStartCards, currentTurn, gameOn)
             VALUES(NULL, '$randomString', $nStartCards, 0, 0)";
 
-if ($sql->query($query) === true) {
+if ($sql->query($query)) {
     echo $randomString;
 } else {
-    echo "Error: " . $query . " " . $sql->error;
+    die("Error: " . $query . " " . $sql->error . "\n");
 }
 
 $conn->close();

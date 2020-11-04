@@ -15,7 +15,9 @@ $playerName = $_GET['playerName'];
 
 // Get ID of the room with that code
 $query = "SELECT ID, nStartCards FROM rooms where code = '$roomCode'";
-$result = $sql->query($query);
+if(!$result = $sql->query($query)){
+    die("Error: " . $query . " " . $sql->error . "\n");
+}
 
 if ($result->num_rows > 0) {
     $resArr = $result->fetch_assoc();
@@ -23,16 +25,15 @@ if ($result->num_rows > 0) {
     $nStartCards = $resArr['nStartCards'];
 } else {
     http_response_code(404);
-    echo "Room code not valid";
+    die("Room code not valid");
 }
 
 // Create new user
 $position = 0;
 do {
     // If position 0 is valid this player will be the dealer
-    if ($position === 0) {
-        $dealer = true;
-    }
+    $dealer = $position === 0 ? 1 : 0;
+
     $query = "INSERT INTO players (ID, roomID, playerName, position, nCards, dealer)
     VALUES(NULL, $roomID, '$playerName', $position, $nStartCards, $dealer)";
     $status = $sql->query($query);
@@ -40,8 +41,7 @@ do {
 
     // If the error does not contain 'theOrder' break cycle
     if ($status !== true && strpos($sql->error, 'theOrder') === false) {
-        echo "Error: " . $query . " " . $sql->error . "\n";
-        break;
+        die("Error: " . $query . " " . $sql->error . "\n");
     } else if ($status !== true) {
         echo "Incremented position to: " . $position . "\n";
     }
