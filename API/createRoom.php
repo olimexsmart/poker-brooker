@@ -6,6 +6,8 @@ require 'login.php';
 $sql = new mysqli($serverName, $username, $password, $dbname);
 // Check connection
 if ($sql->connect_error) {
+    //FIXME add there error codes everywhere
+    http_response_code(502);
     die("Connection failed: " . $sql->connect_error);
 }
 
@@ -30,4 +32,4 @@ if ($sql->query($query)) {
     die("Error: " . $query . " " . $sql->error . "\n");
 }
 
-$conn->close();
+$sql->close();

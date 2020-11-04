@@ -121,3 +121,4 @@ while ($resArr = $result->fetch_assoc()) {
 // Formulate complete response and conclude
 header('Content-Type: application/json');
 echo json_encode(array("gameOn" => $gameOn == 0 ? false : true, "players" => $players));
+$sql->close();

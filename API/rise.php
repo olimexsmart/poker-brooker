@@ -58,3 +58,4 @@ if (!$sql->query($query)) {
 }
 
 echo "DONE";
+$sql->close();

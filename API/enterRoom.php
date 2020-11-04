@@ -42,12 +42,11 @@ do {
     // If the error does not contain 'theOrder' break cycle
     if ($status !== true && strpos($sql->error, 'theOrder') === false) {
         die("Error: " . $query . " " . $sql->error . "\n");
-    } else if ($status !== true) {
+    } /*else if ($status !== true) {
         echo "Incremented position to: " . $position . "\n";
-    }
+    }*/
     // Increment position until is valid
 } while ($status !== true);
 
-echo "Player created";
-
-$conn->close();
+echo $sql->insert_id;;
+$sql->close();

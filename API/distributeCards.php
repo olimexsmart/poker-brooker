@@ -91,7 +91,6 @@ while ($resArr = $result->fetch_assoc()) {
 
 
 echo "DONE";
+$sql->close();
 
 
-
-// For each player get how many cards he needs
