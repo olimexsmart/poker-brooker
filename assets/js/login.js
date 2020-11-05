@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (response.ok) {
                     response.text().then(text => {
                         localStorage.setItem('playerID', text)
+                        localStorage.setItem('roomCode', roomCode)
                         window.location.href = location.pathname + 'game/game.html'
                     })
                 } else {

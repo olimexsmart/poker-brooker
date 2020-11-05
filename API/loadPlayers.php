@@ -53,7 +53,7 @@ while ($resArr = $result->fetch_assoc()) {
     // General info
     $info = array();
     $info['name'] = $resArr['playerName'];
-    $info['nCards'] = $resArr['nCards'];
+    $info['nCards'] = (int) $resArr['nCards'];
     $info['isDealer'] = $resArr['dealer'] == 1 ? true : false;
 
     // If it's me

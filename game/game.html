@@ -74,17 +74,19 @@
         <section class="jumbotron text-center">
             <div class="container">
                 <div class="row align-items-center justify-content-around">
-                    <h3 class="mt-2">KJNK4</h3>
-                    <a class="btn btn-secondary my-2">Exit</a>
+                    <h3 id="roomCodeH3" class="mt-2"></h3>
+                    <button id="exitBtn" type="button" class="btn btn-secondary my-2">Exit</button>
                 </div>
-                <p class="lead text-muted">Cards: 13 <br> Players in game: 4 <br>Game: OFF</p>
-                <button type="button" class="btn btn-danger">Stop Round</button>
+                <!-- Cards: 13<br>Players in game: 4<br>Game: OFF -->
+                <p id="gameInfoP" class="lead text-muted"></p>
+                <button id="adminBtn" type="button" class="btn btn-danger d-none">Stop Round</button>
             </div>
         </section>
 
         <div class="py-3">
             <div class="container">
-                <div class="row">
+                <div class="alert alert-danger d-none" id="errAlert" role="alert"></div>
+                <div class="row" id="rowDiv">
                     <div class="col-md-4">
                         <div class="card mb-3 shadow-sm border-success">
                             <div class="card-header h5">
