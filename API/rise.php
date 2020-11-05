@@ -51,6 +51,7 @@ if ($result->num_rows > 0) {
 }
 
 // Update turn
+// FIXME this is wrong because can also be out of the game
 $newTurn = ($currentTurn + 1) % $nPlayers;
 $query = "UPDATE rooms SET currentTurn = $newTurn WHERE ID = $roomID";
 if (!$sql->query($query)) {
