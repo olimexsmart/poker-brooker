@@ -33,3 +33,7 @@
 footer p {
     margin-bottom: .25rem;
 }
+
+.big-text {
+    font-size: 140px;
+}

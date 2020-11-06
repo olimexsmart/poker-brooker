@@ -28,10 +28,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     adminBtn.addEventListener('click', () => {
         // Depends on current button state
-
-        // Request card distribution - game on
-        // Request card reveal - game off
-        // Hide - Show controls on player cards
+        if (adminBtn.classList.contains('btn-danger')) {
+            // Request card reveal - game off
+            fetch('../API/doubt.php?playerID=' + localStorage.getItem('playerID'))
+                .then(response => {
+                    if (!response.ok) {
+                        response.text().then(text => {
+                            errAlertAl.innerText = text
+                            errAlertAl.classList.remove('d-none')
+                        })
+                    }
+                })
+        } else {
+            // Request card distribution - game on
+            fetch('../API/distributeCards.php?dealerID=' + localStorage.getItem('playerID'))
+                .then(response => {
+                    if (!response.ok) {
+                        response.text().then(text => {
+                            errAlertAl.innerText = text
+                            errAlertAl.classList.remove('d-none')
+                        })
+                    }
+                })
+        }
     })
 
     // Define function callbacks for buttons in cards
@@ -50,23 +69,40 @@ document.addEventListener('DOMContentLoaded', function() {
                             // Admin button
                             if (player.isDealer && player.itsMe) {
                                 adminBtn.classList.remove('d-none')
+                                    // Toggle button function
+                                if (text.gameOn) {
+                                    adminBtn.classList.remove('btn-success')
+                                    adminBtn.classList.add('btn-danger')
+                                    adminBtn.innerText = 'Stop round'
+                                } else {
+                                    adminBtn.classList.remove('btn-danger')
+                                    adminBtn.classList.add('btn-success')
+                                    adminBtn.innerText = 'New round'
+                                }
+
+                                // Switch on-off admin buttons on players
+                                let dealerBtn = document.querySelectorAll('*[id^="dealerBtn"]');
+                                if (text.gameOn) {
+                                    dealerBtn.forEach(e => {
+                                        e.classList.add('d-none')
+                                    })
+                                } else {
+                                    dealerBtn.forEach(e => {
+                                        e.classList.remove('d-none')
+                                    })
+                                }
                             }
 
-                            // Switch on-off admin buttons on players
-
-                            // If it's me, show my buttons
-
                             // Add card if not already present
-
-                            // Update card if already present
-
-                            // Header number of cards
-
-                            // If cards array is populated, show cards
-                            // Else show turned cards
-
-                            // Remove card if player not present anymore
+                            const cardRef = document.getElementById(`playerCart${player.ID}`)
+                            if (!cardRef) {
+                                addPlayerCard(player)
+                            } else { // Update card if already present
+                                updatePlayerCard(player, cardRef, text.gameOn)
+                            }
                         }
+
+                        // TODO Remove player card
 
                         // Updating game info
                         gameInfoP.innerText = `Cards: ${totCards}

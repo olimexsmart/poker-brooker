@@ -70,17 +70,22 @@ while ($resArr = $result->fetch_assoc()) {
         $info['hisTurn'] = false;
     }
 
+    /*
     // If I am the dealer, I need to know other players IDs
     if ($IAmTheDealer == 1) {
         $info['ID'] = $resArr['ID'];
     } else {
         $info['ID'] = null;
     }
+    */
+    //Actually need to know ID of every player to match info with GUI
+    // IDEA instead of database ID, it could be a hash of something
+    $info['ID'] = (int) $resArr['ID'];
 
     // Load cards
     if ($gameOn == 0) { // Of all players if game is off
         $thisPlayerID = $resArr['ID'];
-        $query = "SELECT d.cardName FROM deck AS d 
+        $query = "SELECT d.cardHexCode FROM deck AS d 
                 JOIN hands AS h 
                 ON d.ID = h.cardID 
                 WHERE h.playerID = $thisPlayerID";
@@ -95,7 +100,7 @@ while ($resArr = $result->fetch_assoc()) {
         }
         $info['cards'] = $cards;
     } else if ($resArr['ID'] == $playerID) { // Just me if game is on
-        $query = "SELECT d.cardName FROM deck AS d 
+        $query = "SELECT d.cardHexCode FROM deck AS d 
                 JOIN hands AS h 
                 ON d.ID = h.cardID 
                 WHERE h.playerID = $playerID";

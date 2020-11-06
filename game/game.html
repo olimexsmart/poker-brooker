@@ -33,6 +33,7 @@
     <!-- Custom styles for this template -->
     <link href="../assets/css/album.css" rel="stylesheet">
     <script src="../assets/js/game.js"></script>
+    <script src="../assets/js/card.js"></script>
 </head>
 
 <body>
@@ -77,8 +78,9 @@
                     <h3 id="roomCodeH3" class="mt-2"></h3>
                     <button id="exitBtn" type="button" class="btn btn-secondary my-2">Exit</button>
                 </div>
-                <!-- Cards: 13<br>Players in game: 4<br>Game: OFF -->
-                <p id="gameInfoP" class="lead text-muted"></p>
+                <p id="gameInfoP" class="lead text-muted">
+                    <!-- Game Info Here -->
+                </p>
                 <button id="adminBtn" type="button" class="btn btn-danger d-none">Stop Round</button>
             </div>
         </section>
@@ -87,27 +89,7 @@
             <div class="container">
                 <div class="alert alert-danger d-none" id="errAlert" role="alert"></div>
                 <div class="row" id="rowDiv">
-                    <div class="col-md-4">
-                        <div class="card mb-3 shadow-sm border-success">
-                            <div class="card-header h5">
-                                Olli
-                                <cite class="text-secondary"> - 5 cards</cite>
-                            </div>
-                            <div class="card-body">
-                                <h2 class="mb-0">🂡 🂢 🂣 🂤 🂥</h2>
-                                <div class="btn-group btn-block btn-group-sm mt-3 d-none" role="group" aria-label="Basic example">
-                                    <button type="button" class="btn btn-outline-primary">Rise</button>
-                                    <button type="button" class="btn btn-outline-warning">Doubt</button>
-                                </div>
-                                <div class="btn-group btn-block btn-group-sm mt-3" role="group" aria-label="Basic example">
-                                    <button type="button" class="btn btn-outline-secondary">Card Up</button>
-                                    <button type="button" class="btn btn-outline-secondary">Card Down</button>
-                                    <button type="button" class="btn btn-success">Starter</button>
-                                    <button type="button" class="btn btn-danger">Kick</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Player cards go in here -->
                 </div>
             </div>
         </div>
