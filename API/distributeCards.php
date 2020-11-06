@@ -74,6 +74,7 @@ while ($resArr = $result->fetch_assoc()) {
 
     for ($c = 0; $c < $nCards; $c++) {
         // Find available card
+        // FIXME could become infinite loop if sum nCard > 52
         do {
             $r = random_int(0, 51);
         } while ($takenID[$r] !== null);

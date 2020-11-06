@@ -35,14 +35,13 @@ if ($isDealer === 0) {
 }
 
 // Get player info
-$query = "SELECT roomID, position FROM players WHERE ID = $playerID";
+$query = "SELECT roomID FROM players WHERE ID = $playerID";
 if (!$result = $sql->query($query)) {
     die("Error: " . $query . " " . $sql->error . "\n");
 }
 
 if ($result->num_rows > 0) {
     $resArr = $result->fetch_assoc();
-    $position = (int) $resArr['position'];
     $roomID2 = (int) $resArr['roomID'];
 } else {
     http_response_code(403);
@@ -55,8 +54,9 @@ if ($roomID1 !== $roomID2) {
     die("Players not in the same room");
 }
 
-// Apply changes
-$query = "UPDATE rooms SET currentTurn = $position WHERE ID = $roomID1";
+
+// Set player cards to zero
+$query = "UPDATE players SET nCards = 0 WHERE ID = $playerID";
 if (!$sql->query($query)) {
     die("Error: " . $query . " " . $sql->error . "\n");
 }

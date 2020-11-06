@@ -61,6 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (response.ok) {
                     response.json().then(text => {
                         let totCards = 0;
+                        let allCards = Array.from(document.querySelectorAll('*[id^="playerCart"]'))
                         for (let c = 0; c < text.players.length; c++) {
                             const player = text.players[c];
 
@@ -99,10 +100,19 @@ document.addEventListener('DOMContentLoaded', function() {
                                 addPlayerCard(player)
                             } else { // Update card if already present
                                 updatePlayerCard(player, cardRef, text.gameOn)
+
+                                // Remove from array of childs
+                                let index = allCards.indexOf(cardRef)
+                                if (index > -1) {
+                                    allCards.splice(index, 1);
+                                }
                             }
                         }
 
-                        // TODO Remove player card
+                        // Remove elements not present in DB
+                        for (let i = 0; i < allCards.length; i++) {
+                            allCards[i].parentNode.remove()
+                        }
 
                         // Updating game info
                         gameInfoP.innerText = `Cards: ${totCards}

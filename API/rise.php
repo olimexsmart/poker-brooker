@@ -26,18 +26,6 @@ if ($result->num_rows > 0) {
     die("playerID not recognized. " . $sql->error);
 }
 
-// Get how many players are in the room
-$query = "SELECT COUNT(*) FROM players WHERE roomID = $roomID";
-if (!$result = $sql->query($query)) {
-    die("Error: " . $query . " " . $sql->error . "\n");
-}
-if ($result->num_rows > 0) {
-    $resArr = $result->fetch_row();
-    $nPlayers = (int) $resArr[0];
-} else {
-    die("Could not count players. " . $sql->error);
-}
-
 // Get current turn value
 $query = "SELECT currentTurn FROM rooms WHERE ID = $roomID";
 if (!$result = $sql->query($query)) {
@@ -50,9 +38,44 @@ if ($result->num_rows > 0) {
     die("Could not get current turn value. " . $sql->error);
 }
 
+// Get all the player card and position
+$query = "SELECT nCards, position FROM players WHERE roomID = $roomID ORDER BY position ASC";
+if (!$result = $sql->query($query)) {
+    die("Error: " . $query . " " . $sql->error . "\n");
+}
+
+$posArr = array();
+$currPlayer = 0;
+$i = 0;
+while ($resArr = $result->fetch_assoc()) {
+    array_push($posArr, $resArr);
+    // Find current player in table (a player could exit the game)
+    if ($resArr['position'] == $currentTurn) {
+        $currPlayer = $i;
+    }
+    $i++;
+}
+
+// Find next with card in hand
+$newTurn = -1;
+for ($i = $currPlayer + 1; $i < count($posArr); $i++) {
+    if ($posArr[$i]['nCards'] != 0) {
+        $newTurn = $i;
+        break;
+    }
+}
+
+// Could be that we need to search from beginning
+if ($newTurn === -1) {
+    for ($i = 0; $i < count($posArr); $i++) {
+        if ($posArr[$i]['nCards'] != 0) {
+            $newTurn = $i;
+            break;
+        }
+    }
+}
+
 // Update turn
-// FIXME this is wrong because can also be out of the game
-$newTurn = ($currentTurn + 1) % $nPlayers;
 $query = "UPDATE rooms SET currentTurn = $newTurn WHERE ID = $roomID";
 if (!$sql->query($query)) {
     die("Error: " . $query . " " . $sql->error . "\n");
