@@ -37,8 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     enterRoomBtn.addEventListener('click', () => {
         let playerName = playerNameIn.value
-            //TODO toupper
-        let roomCode = roomCodeIn.value
+        let roomCode = roomCodeIn.value.toUpperCase()
 
         fetch(`API/enterRoom.php?playerName=${playerName}&roomCode=${roomCode}`)
             .then(response => {

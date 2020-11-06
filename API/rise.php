@@ -6,6 +6,7 @@ require 'login.php';
 $sql = new mysqli($serverName, $username, $password, $dbname);
 // Check connection
 if ($sql->connect_error) {
+    http_response_code(502);
     die("Connection failed: " . $sql->connect_error);
 }
 
@@ -15,6 +16,7 @@ $playerID = $_GET['playerID'];
 // Get player info
 $query = "SELECT roomID FROM players WHERE ID = $playerID";
 if (!$result = $sql->query($query)) {
+    http_response_code(506);
     die("Error: " . $query . " " . $sql->error . "\n");
 }
 
@@ -29,6 +31,7 @@ if ($result->num_rows > 0) {
 // Get current turn value
 $query = "SELECT currentTurn FROM rooms WHERE ID = $roomID";
 if (!$result = $sql->query($query)) {
+    http_response_code(506);
     die("Error: " . $query . " " . $sql->error . "\n");
 }
 if ($result->num_rows > 0) {
@@ -41,6 +44,7 @@ if ($result->num_rows > 0) {
 // Get all the player card and position
 $query = "SELECT nCards, position FROM players WHERE roomID = $roomID ORDER BY position ASC";
 if (!$result = $sql->query($query)) {
+    http_response_code(506);
     die("Error: " . $query . " " . $sql->error . "\n");
 }
 
@@ -78,6 +82,7 @@ if ($newTurn === -1) {
 // Update turn
 $query = "UPDATE rooms SET currentTurn = $newTurn WHERE ID = $roomID";
 if (!$sql->query($query)) {
+    http_response_code(506);
     die("Error: " . $query . " " . $sql->error . "\n");
 }
 

@@ -6,7 +6,6 @@ require 'login.php';
 $sql = new mysqli($serverName, $username, $password, $dbname);
 // Check connection
 if ($sql->connect_error) {
-    //FIXME add there error codes everywhere
     http_response_code(502);
     die("Connection failed: " . $sql->connect_error);
 }
@@ -15,7 +14,7 @@ if ($sql->connect_error) {
 $nStartCards = $_GET['nStartCards'];
 
 // Generate room code - length of 5
-$characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+$characters = '123456789ABCDEFGHJKLMNPQRSTUVWXYZ';
 $charactersLength = strlen($characters);
 $randomString = '';
 for ($i = 0; $i < 5; $i++) {
@@ -29,6 +28,7 @@ $query = "INSERT INTO rooms (ID, code, nStartCards, currentTurn, gameOn)
 if ($sql->query($query)) {
     echo $randomString;
 } else {
+    http_response_code(506);
     die("Error: " . $query . " " . $sql->error . "\n");
 }
 

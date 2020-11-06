@@ -6,6 +6,7 @@ require 'login.php';
 $sql = new mysqli($serverName, $username, $password, $dbname);
 // Check connection
 if ($sql->connect_error) {
+    http_response_code(502);
     die("Connection failed: " . $sql->connect_error);
 }
 
@@ -15,6 +16,7 @@ $playerID = $_GET['playerID'];
 // Get player info
 $query = "SELECT roomID, dealer FROM players WHERE ID = $playerID";
 if (!$result = $sql->query($query)) {
+    http_response_code(506);
     die("Error: " . $query . " " . $sql->error . "\n");
 }
 
@@ -30,6 +32,7 @@ if ($result->num_rows > 0) {
 // Get if game is on
 $query = "SELECT gameOn, currentTurn FROM rooms WHERE ID = $roomID";
 if (!$result = $sql->query($query)) {
+    http_response_code(506);
     die("Error: " . $query . " " . $sql->error . "\n");
 }
 
@@ -45,6 +48,7 @@ if ($result->num_rows > 0) {
 // Get information about all the players
 $query = "SELECT * FROM players WHERE roomID = $roomID";
 if (!$result = $sql->query($query)) {
+    http_response_code(506);
     die("Error: " . $query . " " . $sql->error . "\n");
 }
 
@@ -91,7 +95,8 @@ while ($resArr = $result->fetch_assoc()) {
                 WHERE h.playerID = $thisPlayerID";
 
         if (!$resultC = $sql->query($query)) {
-            die("Error: " . $query . " " . $sql->error . "\n");
+            http_response_code(506);
+    die("Error: " . $query . " " . $sql->error . "\n");
         }
 
         $cards = array();
@@ -106,7 +111,8 @@ while ($resArr = $result->fetch_assoc()) {
                 WHERE h.playerID = $playerID";
 
         if (!$resultC = $sql->query($query)) {
-            die("Error: " . $query . " " . $sql->error . "\n");
+            http_response_code(506);
+    die("Error: " . $query . " " . $sql->error . "\n");
         }
 
         $cards = array();

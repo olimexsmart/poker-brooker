@@ -6,6 +6,7 @@ require 'login.php';
 $sql = new mysqli($serverName, $username, $password, $dbname);
 // Check connection
 if ($sql->connect_error) {
+    http_response_code(502);
     die("Connection failed: " . $sql->connect_error);
 }
 
@@ -16,6 +17,7 @@ $playerName = $_GET['playerName'];
 // Get ID of the room with that code
 $query = "SELECT ID, nStartCards FROM rooms where code = '$roomCode'";
 if(!$result = $sql->query($query)){
+    http_response_code(506);
     die("Error: " . $query . " " . $sql->error . "\n");
 }
 
@@ -41,7 +43,8 @@ do {
 
     // If the error does not contain 'theOrder' break cycle
     if ($status !== true && strpos($sql->error, 'theOrder') === false) {
-        die("Error: " . $query . " " . $sql->error . "\n");
+        http_response_code(506);
+    die("Error: " . $query . " " . $sql->error . "\n");
     } /*else if ($status !== true) {
         echo "Incremented position to: " . $position . "\n";
     }*/

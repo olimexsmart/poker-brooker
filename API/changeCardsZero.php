@@ -6,6 +6,7 @@ require 'login.php';
 $sql = new mysqli($serverName, $username, $password, $dbname);
 // Check connection
 if ($sql->connect_error) {
+    http_response_code(502);
     die("Connection failed: " . $sql->connect_error);
 }
 
@@ -16,6 +17,7 @@ $playerID = $_GET['playerID'];
 // Check if is really a dealer
 $query = "SELECT roomID, dealer FROM players WHERE ID = $dealerID";
 if (!$result = $sql->query($query)) {
+    http_response_code(506);
     die("Error: " . $query . " " . $sql->error . "\n");
 }
 
@@ -37,6 +39,7 @@ if ($isDealer === 0) {
 // Get player info
 $query = "SELECT roomID FROM players WHERE ID = $playerID";
 if (!$result = $sql->query($query)) {
+    http_response_code(506);
     die("Error: " . $query . " " . $sql->error . "\n");
 }
 
@@ -58,6 +61,7 @@ if ($roomID1 !== $roomID2) {
 // Set player cards to zero
 $query = "UPDATE players SET nCards = 0 WHERE ID = $playerID";
 if (!$sql->query($query)) {
+    http_response_code(506);
     die("Error: " . $query . " " . $sql->error . "\n");
 }
 

@@ -6,6 +6,7 @@ require 'login.php';
 $sql = new mysqli($serverName, $username, $password, $dbname);
 // Check connection
 if ($sql->connect_error) {
+    http_response_code(502);
     die("Connection failed: " . $sql->connect_error);
 }
 
@@ -15,6 +16,7 @@ $playerID = $_GET['playerID'];
 // Get player info
 $query = "SELECT roomID FROM players WHERE ID = $playerID";
 if (!$result = $sql->query($query)) {
+    http_response_code(506);
     die("Error: " . $query . " " . $sql->error . "\n");
 }
 
@@ -28,6 +30,7 @@ if ($result->num_rows > 0) {
 
 $query = "UPDATE rooms SET gameOn = 0 WHERE ID = $roomID";
 if (!$sql->query($query)) {
+    http_response_code(506);
     die("Error: " . $query . " " . $sql->error . "\n");
 }
 

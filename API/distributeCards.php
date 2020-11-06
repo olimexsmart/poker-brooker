@@ -6,6 +6,7 @@ require 'login.php';
 $sql = new mysqli($serverName, $username, $password, $dbname);
 // Check connection
 if ($sql->connect_error) {
+    http_response_code(502);
     die("Connection failed: " . $sql->connect_error);
 }
 
@@ -30,6 +31,7 @@ if ($result = $sql->query($query)) {
 $dealerID = $_GET['dealerID'];
 $query = "SELECT roomID, dealer FROM players WHERE ID = $dealerID";
 if (!$result = $sql->query($query)) {
+    http_response_code(506);
     die("Error: " . $query . " " . $sql->error . "\n");
 }
 
@@ -51,12 +53,14 @@ if ($isDealer === 0) {
 // Game is ON
 $query = "UPDATE rooms SET gameOn = 1 WHERE ID = $roomID";
 if (!$sql->query($query)) {
+    http_response_code(506);
     die("Error: " . $query . " " . $sql->error . "\n");
 }
 
 // Get other players IDs
 $query = "SELECT ID, nCards FROM players WHERE roomID = $roomID";
 if (!$result = $sql->query($query)) {
+    http_response_code(506);
     die("Error: " . $query . " " . $sql->error . "\n");
 }
 
@@ -69,7 +73,8 @@ while ($resArr = $result->fetch_assoc()) {
     // Delete possible previous entries
     $query = "DELETE FROM hands WHERE playerID = $playerID";
     if (!$sql->query($query)) {
-        die("Error: " . $query . " " . $sql->error . "\n");
+        http_response_code(506);
+    die("Error: " . $query . " " . $sql->error . "\n");
     }
 
     for ($c = 0; $c < $nCards; $c++) {
@@ -84,7 +89,8 @@ while ($resArr = $result->fetch_assoc()) {
         $query = "INSERT INTO hands (ID, playerID, cardID)
                 VALUES(NULL, $playerID, $r + 1)";
         if (!$sql->query($query)) {
-            die("Error: " . $query . " " . $sql->error . "\n");
+            http_response_code(506);
+    die("Error: " . $query . " " . $sql->error . "\n");
         }
     }
 }
