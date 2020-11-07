@@ -14,7 +14,7 @@ if ($sql->connect_error) {
 $nStartCards = $_GET['nStartCards'];
 
 // Generate room code - length of 5
-$characters = '123456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+$characters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
 $charactersLength = strlen($characters);
 $randomString = '';
 for ($i = 0; $i < 5; $i++) {

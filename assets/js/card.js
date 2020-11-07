@@ -24,11 +24,32 @@ function doubtCallback() {
         })
 }
 
+function starterCallback() {
+    let playerID = parseInt(this.name)
+
+    fetch(`../API/changeNextPlayer.php?dealerID=${localStorage.getItem('playerID')}
+            &playerID=${playerID}`)
+        .then(response => {
+            if (!response.ok) {
+                response.text().then(text => {
+                    const errAlertAl = document.getElementById('errAlert')
+                    errAlertAl.innerText = text
+                    errAlertAl.classList.remove('d-none')
+                })
+            }
+        })
+}
+
 function cardChangeCallback() {
     let spl = this.name.split('-')
     let playerID = parseInt(spl[0])
     let up = spl[1].includes('UP') ? 1 : 0;
-
+    // Automatically starts player that gor a card
+    if (up === 1) {
+        let bindFunc = starterCallback.bind(this)
+        bindFunc()
+    }
+        
     fetch(`../API/changePlayerNCards.php?dealerID=${localStorage.getItem('playerID')}
             &playerID=${playerID}
             &up=${up}`)
@@ -59,21 +80,6 @@ function zeroCallback() {
         })
 }
 
-function starterCallback() {
-    let playerID = parseInt(this.name)
-
-    fetch(`../API/changeNextPlayer.php?dealerID=${localStorage.getItem('playerID')}
-            &playerID=${playerID}`)
-        .then(response => {
-            if (!response.ok) {
-                response.text().then(text => {
-                    const errAlertAl = document.getElementById('errAlert')
-                    errAlertAl.innerText = text
-                    errAlertAl.classList.remove('d-none')
-                })
-            }
-        })
-}
 
 function kickCallback() {
     let playerID = parseInt(this.name)
@@ -100,17 +106,17 @@ function addPlayerCard(player) {
                 <cite class="text-secondary" id="playerNCards${player.ID}"> - ${player.nCards} cards</cite>
             </div>
             <div class="card-body">
-                <h1 class="mb-0 big-text" id="playerCards${player.ID}">&#127183;</h1>
+                <h1 class="mb-0 big-text" id="playerCards${player.ID}"></h1>
                 <div class="btn-group btn-block btn-group-sm mt-3 d-none" role="group" id="playerBtn${player.ID}">
-                    <button type="button" class="btn btn-outline-primary" name="${player.ID}" id="riseBtn${player.ID}">Rise</button>
-                    <button type="button" class="btn btn-outline-warning" name="${player.ID}" id="doubtBtn${player.ID}">Doubt</button>
+                    <button type="button" class="btn btn-outline-primary" name="${player.ID}" id="riseBtn${player.ID}">Rilancio</button>
+                    <button type="button" class="btn btn-outline-warning" name="${player.ID}" id="doubtBtn${player.ID}">Dubito</button>
                 </div>
                 <div class="btn-group btn-block btn-group-sm mt-3 d-none" role="group" id="dealerBtn${player.ID}">
-                    <button type="button" class="btn btn-outline-secondary" name="${player.ID}-UP" id="cardUpBtn${player.ID}">Card Up</button>
-                    <button type="button" class="btn btn-outline-secondary" name="${player.ID}-DOWN" id="cardDownBtn${player.ID}">Card Down</button>
+                    <button type="button" class="btn btn-outline-secondary" name="${player.ID}-DOWN" id="cardDownBtn${player.ID}">Meno Carte</button>
+                    <button type="button" class="btn btn-outline-secondary" name="${player.ID}-UP" id="cardUpBtn${player.ID}">Più Carte</button>
                     <button type="button" class="btn btn-outline-danger" name="${player.ID}" id="zeroBtn${player.ID}">Zero</button>
-                    <button type="button" class="btn btn-success" name="${player.ID}" id="starterBtn${player.ID}">Starter</button>
-                    <button type="button" class="btn btn-danger" name="${player.ID}" id="kickBtn${player.ID}">Kick</button>
+                    <button type="button" class="btn btn-success" name="${player.ID}" id="starterBtn${player.ID}">Primo di mano</button>
+                    <button type="button" class="btn btn-danger" name="${player.ID}" id="kickBtn${player.ID}">Elimina</button>
                 </div>
             </div>
         </div>
@@ -168,7 +174,7 @@ function updatePlayerCard(player, cardRef, gameOn) {
     }
 
     // Number of cards count
-    document.getElementById(`playerNCards${player.ID}`).innerText = ` - ${player.nCards} cards`
+    document.getElementById(`playerNCards${player.ID}`).innerText = ` - ${player.nCards} carte`
 
     // Show buttons if its turn
     const playerBtn = document.getElementById(`playerBtn${player.ID}`)

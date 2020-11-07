@@ -80,8 +80,15 @@ while ($resArr = $result->fetch_assoc()) {
     for ($c = 0; $c < $nCards; $c++) {
         // Find available card
         // FIXME could become infinite loop if sum nCard > 52
+        // Avoid infite loops
+        $iter = 0;
         do {
             $r = random_int(0, 51);
+            if ($iter > 52) {
+                http_response_code(503);
+                die("Somehow we are trying distribute more than 52 cards.");
+            }
+            $iter++;
         } while ($takenID[$r] !== null);
 
         //Assign card to this player

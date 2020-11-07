@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v4.1.1">
-    <title>Album example · Bootstrap</title>
+    <title>Poker Polacco</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/album/">
 
@@ -34,6 +34,7 @@
     <link href="../assets/css/album.css" rel="stylesheet">
     <script src="../assets/js/game.js"></script>
     <script src="../assets/js/card.js"></script>
+    <link rel="icon" type="image/png" href="../assets/images/favicon.png" />
 </head>
 
 <body>
@@ -42,17 +43,19 @@
             <div class="container">
                 <div class="row">
                     <div class="col-sm-8 col-md-7 py-4">
-                        <h4 class="text-white">About</h4>
-                        <p class="text-muted">Cards:
+                        <h4 class="text-white">Il gioco</h4>
+                        <p class="text-muted">Una volta che si conoscono le diverse mani del poker (coppia, doppia coppia, tris, ecc) il gioco è decisamente semplice. Ogni mano inizia distribuendo a tutti i giocaotori almeno una carta, ma in genere si inizia con due carte a testa. Il primo di mano fa una giocata (ad esempio: tris di sette). Il turno passa al giocatore successivo, che può scegliere se alzare la puntata oppure dubitare. La mano prosegue finché un giocatore non dubita la puntata del giocatore precedente. Quando un giocatore dubita, tutti i giocatori mostrano le proprie carte. A questi punti si verifica se la puntata dubitata è valida, tra tutte le carte presenti sul tavolo. Se la puntata è corretta, il giocatore che ha dubitato prende una carta in più, altrimenti prende una carta in più chi ha fatto la puntata. Quando un giocatore arriva ad un numero prefissato di carte, generalmente sei o sette, è fuori dal gioco. 
+                        </p>
+                        <p class="text-muted">Qua alcuni link che spiegano come funziona il poker polacco: <a href="http://poker.excite.it/le-regole-del-poker-polacco-N71366.html" class="text-white">Sito Uno,</a> <a href="http://www.pokeritaliaweb.org/strategie/regole-del-poker/9664-piw-poker-school-poker-polacco.html" class="text-white">Sito Due.</a> <a href="https://casino.giocodigitale.it/it/blog/poker/poker-polacco/" class="text-white">Sito Tre</a>.
+                        
                         </p>
                     </div>
                     <div class="col-sm-4 offset-md-1 py-4">
-                        <h4 class="text-white">Contact</h4>
-                        <ul class="list-unstyled">
-                            <li><a href="#" class="text-white">Follow on Twitter</a></li>
-                            <li><a href="#" class="text-white">Like on Facebook</a></li>
-                            <li><a href="#" class="text-white">Email me</a></li>
-                        </ul>
+                        <h4 class="text-white">Il sito</h4>
+                        <p class="text-muted">
+                        Nato in vista del secondo lockdown, è sviluppato usando Bootstrap e vanilla JS. In back-end uno stack LAMP si occupa di far girare le cose. </p>
+                        
+                        <p class="text-muted">Mi trovate su <a href="https://www.instagram.com/olimexsmart/" class="text-white">Instagram</a></p>
                     </div>
                 </div>
             </div>
@@ -60,8 +63,7 @@
         <div class="navbar navbar-dark bg-dark shadow-sm">
             <div class="container d-flex justify-content-between">
                 <a href="#" class="navbar-brand d-flex align-items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="mr-2" viewBox="0 0 24 24" focusable="false"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                    <strong>Poker Brooker</strong>
+                    <strong>Poker Polacco</strong>
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -76,12 +78,12 @@
             <div class="container">
                 <div class="row align-items-center justify-content-around">
                     <h3 id="roomCodeH3" class="mt-2"></h3>
-                    <button id="exitBtn" type="button" class="btn btn-secondary my-2">Exit</button>
+                    <button id="exitBtn" type="button" class="btn btn-secondary my-2">Esci</button>
                 </div>
                 <p id="gameInfoP" class="lead text-muted">
                     <!-- Game Info Here -->
                 </p>
-                <button id="adminBtn" type="button" class="btn btn-danger d-none">Stop Round</button>
+                <button id="adminBtn" type="button" class="btn btn-danger d-none"></button>
             </div>
         </section>
 

@@ -53,8 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     })
 
-    // Define function callbacks for buttons in cards
-
+    // Periodically update player cards
     setInterval(() => {
         fetch('../API/loadPlayers.php?playerID=' + localStorage.getItem('playerID'))
             .then(response => {
@@ -62,6 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     response.json().then(text => {
                         let totCards = 0;
                         let allCards = Array.from(document.querySelectorAll('*[id^="playerCart"]'))
+                        let adminName = ''
                         for (let c = 0; c < text.players.length; c++) {
                             const player = text.players[c];
 
@@ -74,11 +74,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                 if (text.gameOn) {
                                     adminBtn.classList.remove('btn-success')
                                     adminBtn.classList.add('btn-danger')
-                                    adminBtn.innerText = 'Stop round'
+                                    adminBtn.innerText = 'Annulla Mano'
                                 } else {
                                     adminBtn.classList.remove('btn-danger')
                                     adminBtn.classList.add('btn-success')
-                                    adminBtn.innerText = 'New round'
+                                    adminBtn.innerText = 'Distribuisci Carte'
                                 }
 
                                 // Switch on-off admin buttons on players
@@ -93,6 +93,10 @@ document.addEventListener('DOMContentLoaded', function() {
                                     })
                                 }
                             }
+                            
+                            // Save admin admin
+                            if (player.isDealer) 
+                                adminName = player.name
 
                             // Add card if not already present
                             const cardRef = document.getElementById(`playerCart${player.ID}`)
@@ -115,9 +119,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
 
                         // Updating game info
-                        gameInfoP.innerText = `Cards: ${totCards}
-                        Players in game: ${text.players.length}
-                        Game: ${text.gameOn ? 'ON' : 'OFF'}`
+                        gameInfoP.innerText = `Carte: ${totCards}
+                        Giocatori: ${text.players.length}
+                        Mazziere: ${adminName}
+                        Round: ${text.gameOn ? 'In Corso' : 'In attesa'}`
                     })
                 } else {
                     response.text().then(text => {

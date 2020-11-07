@@ -7,18 +7,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const errEnterAl = document.getElementById('errEnter')
     const nStartCardsIn = document.getElementById('nStartCards')
 
+    function pressEnterToClick(event) {    
+        if (event.keyCode == 13) {
+            const e = new Event('click')
+            enterRoomBtn.dispatchEvent(e)
+        }
+    }
+    
+    roomCodeIn.addEventListener('keydown', pressEnterToClick)
+    playerNameIn.addEventListener('keydown', pressEnterToClick)
 
     newRoomBtn.addEventListener('click', () => {
-        let nStCs = parseInt(nStartCardsIn.value)
-        if (isNaN(nStCs) || nStCs < 1 || nStCs > 7)
-            nStCs = 2
+        let nStCs = 2
 
         fetch('API/createRoom.php?nStartCards=' + nStCs)
             .then(response => {
                 if (response.ok) {
                     response.text().then(text => {
                         newRoomCodeAl.innerText = 'Room created! Code: ' + text
-                        newRoomCodeAl.classList.remove('invisible')
+                        newRoomCodeAl.classList.remove('d-none')
                         newRoomCodeAl.classList.remove('alert-danger')
                         newRoomCodeAl.classList.add('alert-success')
 
@@ -27,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     response.text().then(text => {
                         newRoomCodeAl.innerText = 'Error: ' + text
-                        newRoomCodeAl.classList.remove('invisible')
+                        newRoomCodeAl.classList.remove('d-none')
                         newRoomCodeAl.classList.remove('alert-success')
                         newRoomCodeAl.classList.add('alert-danger')
                     })

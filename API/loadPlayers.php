@@ -26,7 +26,7 @@ if ($result->num_rows > 0) {
     $IAmTheDealer = (int) $resArr['dealer'];
 } else {
     http_response_code(403);
-    die("playerID not recognized. " . $sql->error);
+    die("playerID not recognized. It's possible you've been kicked out by the dealer." . $sql->error);
 }
 
 // Get if game is on

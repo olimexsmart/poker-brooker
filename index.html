@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v4.1.1">
-    <title>Signin Template · Bootstrap</title>
+    <title>Poker Polacco</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/sign-in/">
 
@@ -33,22 +33,22 @@
     <!-- Custom styles for this template -->
     <link href="assets/css/signin.css" rel="stylesheet">
     <script src="assets/js/login.js"></script>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png" />
 </head>
-
+<!-- TODO i18n. Don't look away. You know it's important to learn.-->
 <body class="text-center">
     <div class="form-signin">
         <!-- Create Room -->
         <img class="mb-4" src="assets/images/owl.jpg" alt="" width="300" height="300">
-        <h1 class="h3 mb-3 font-weight-normal">Create Room</h1>
-        <input id="nStartCards" class="form-control mb-2" placeholder="Starting cards = 2">
-        <button id="newRoom" class="btn btn-lg btn-primary btn-block mb-4">Create</button>
-        <div id="newRoomCode" class="alert invisible" role="alert"></div>
+        <h1 class="h3 mb-3 font-weight-normal">Crea Partita</h1>
+        <button id="newRoom" class="btn btn-lg btn-primary btn-block mb-4">Crea</button>
+        <div id="newRoomCode" class="alert d-none" role="alert"></div>
         <!-- Enter Room -->
-        <h1 class="h3 mb-3 font-weight-normal">Enter Room</h1>
-        <input id="playerName" class="form-control mb-1" placeholder="Player Name" autofocus>
-        <input id="roomCode" class="form-control mb-2" placeholder="Room Code" autofocus>
-        <button id="enterRoom" class="btn btn-lg btn-primary btn-block">Enter</button>
-        <div id="errEnter" class="alert alert-danger invisible" role="alert"></div>
+        <h1 class="h3 mb-3 font-weight-normal border-top">Entra in Partita</h1>
+        <input id="roomCode" class="form-control mb-2" placeholder="Codice Partita" autofocus>        
+        <input id="playerName" class="form-control mb-1" placeholder="Nickname">
+        <button id="enterRoom" class="btn btn-lg btn-primary btn-block">Entra</button>
+        <div id="errEnter" class="alert alert-danger d-none" role="alert"></div>
         <!-- Useful copyright -->
         <p class="mt-5 mb-3 text-muted">&copy; OberonRobotics</p>
     </div>
