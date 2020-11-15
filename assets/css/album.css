@@ -5,12 +5,13 @@
     /* background-color: #fff; */
 }
 
-@media (min-width: 768px) {
+
+/* @media (min-width: 768px) {
     .jumbotron {
-        padding-top: 3rem;
-        padding-bottom: 3rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
     }
-}
+} */
 
 .jumbotron p:last-child {
     margin-bottom: 0;
@@ -34,6 +35,21 @@ footer p {
     margin-bottom: .25rem;
 }
 
-.big-text {
-    font-size: 140px;
+@font-face {
+    font-family: "DejaVuSans";
+    src: url(../fonts/DejaVuSans.ttf) format("truetype");
+}
+
+.card-body-padding {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+.cards-text {
+    font-family: "DejaVuSans", sans-serif;
+    font-size: 50px;
+}
+
+.wider-border {
+    border-width: 1pt;
 }

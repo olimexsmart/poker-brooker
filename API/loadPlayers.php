@@ -14,7 +14,7 @@ if ($sql->connect_error) {
 $playerID = $_GET['playerID'];
 
 // Get player info
-$query = "SELECT roomID, dealer FROM players WHERE ID = $playerID";
+$query = "SELECT roomID, dealer, nCards FROM players WHERE ID = $playerID";
 if (!$result = $sql->query($query)) {
     http_response_code(506);
     die("Error: " . $query . " " . $sql->error . "\n");
@@ -23,6 +23,8 @@ if (!$result = $sql->query($query)) {
 if ($result->num_rows > 0) {
     $resArr = $result->fetch_assoc();
     $roomID = (int) $resArr['roomID'];
+    // Used to show all cards to players who lost 
+    $nCards = (int) $resArr['nCards'];
     $IAmTheDealer = (int) $resArr['dealer'];
 } else {
     http_response_code(403);
@@ -46,7 +48,7 @@ if ($result->num_rows > 0) {
 }
 
 // Get information about all the players
-$query = "SELECT * FROM players WHERE roomID = $roomID";
+$query = "SELECT * FROM players WHERE roomID = $roomID ORDER BY position";
 if (!$result = $sql->query($query)) {
     http_response_code(506);
     die("Error: " . $query . " " . $sql->error . "\n");
@@ -87,8 +89,8 @@ while ($resArr = $result->fetch_assoc()) {
     $info['ID'] = (int) $resArr['ID'];
 
     // Load cards
-    if ($gameOn == 0) { // Of all players if game is off
-        $thisPlayerID = $resArr['ID'];
+    if ($gameOn == 0 || $nCards == 0) { // Of all players if game is off
+        $thisPlayerID = $resArr['ID'];  // Or this request was sent by a player who lost
         $query = "SELECT d.cardHexCode FROM deck AS d 
                 JOIN hands AS h 
                 ON d.ID = h.cardID 
@@ -96,7 +98,7 @@ while ($resArr = $result->fetch_assoc()) {
 
         if (!$resultC = $sql->query($query)) {
             http_response_code(506);
-    die("Error: " . $query . " " . $sql->error . "\n");
+            die("Error: " . $query . " " . $sql->error . "\n");
         }
 
         $cards = array();
@@ -112,7 +114,7 @@ while ($resArr = $result->fetch_assoc()) {
 
         if (!$resultC = $sql->query($query)) {
             http_response_code(506);
-    die("Error: " . $query . " " . $sql->error . "\n");
+            die("Error: " . $query . " " . $sql->error . "\n");
         }
 
         $cards = array();

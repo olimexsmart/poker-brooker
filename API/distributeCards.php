@@ -74,16 +74,16 @@ while ($resArr = $result->fetch_assoc()) {
     $query = "DELETE FROM hands WHERE playerID = $playerID";
     if (!$sql->query($query)) {
         http_response_code(506);
-    die("Error: " . $query . " " . $sql->error . "\n");
+        die("Error: " . $query . " " . $sql->error . "\n");
     }
 
     for ($c = 0; $c < $nCards; $c++) {
         // Find available card
-        // FIXME could become infinite loop if sum nCard > 52
-        // Avoid infite loops
         $iter = 0;
         do {
             $r = random_int(0, 51);
+
+            // Avoid infite loops
             if ($iter > 52) {
                 http_response_code(503);
                 die("Somehow we are trying distribute more than 52 cards.");
@@ -97,7 +97,7 @@ while ($resArr = $result->fetch_assoc()) {
                 VALUES(NULL, $playerID, $r + 1)";
         if (!$sql->query($query)) {
             http_response_code(506);
-    die("Error: " . $query . " " . $sql->error . "\n");
+            die("Error: " . $query . " " . $sql->error . "\n");
         }
     }
 }
@@ -106,5 +106,3 @@ while ($resArr = $result->fetch_assoc()) {
 
 echo "DONE";
 $sql->close();
-
-

@@ -1,14 +1,18 @@
 function riseCallback() {
-    fetch('../API/rise.php?playerID=' + localStorage.getItem('playerID'))
-        .then(response => {
-            if (!response.ok) {
-                response.text().then(text => {
-                    const errAlertAl = document.getElementById('errAlert')
-                    errAlertAl.innerText = text
-                    errAlertAl.classList.remove('d-none')
-                })
-            }
-        })
+    // Avoid double click
+    if (!this.classList.contains('disabled')) {
+        fetch('../API/rise.php?playerID=' + localStorage.getItem('playerID'))
+            .then(response => {
+                if (!response.ok) {
+                    response.text().then(text => {
+                        const errAlertAl = document.getElementById('errAlert')
+                        errAlertAl.innerText = text
+                        errAlertAl.classList.remove('d-none')
+                    })
+                }
+            })
+    }
+    this.classList.add('disabled')
 }
 
 function doubtCallback() {
@@ -49,7 +53,7 @@ function cardChangeCallback() {
         let bindFunc = starterCallback.bind(this)
         bindFunc()
     }
-        
+
     fetch(`../API/changePlayerNCards.php?dealerID=${localStorage.getItem('playerID')}
             &playerID=${playerID}
             &up=${up}`)
@@ -78,6 +82,16 @@ function zeroCallback() {
                 })
             }
         })
+
+    // These two function call make the next player the new starter
+    let bindFunc = starterCallback.bind(this)
+    bindFunc()
+
+    // This is ugly but ensure that the calls are subsequent
+    setTimeout(() => {
+        bindFunc = riseCallback.bind(this)
+        bindFunc()
+    }, 333)
 }
 
 
@@ -100,21 +114,23 @@ function kickCallback() {
 function addPlayerCard(player) {
     // Construct card HTML
     let card = `                    
-        <div class="card mb-3 shadow-sm" id="playerCart${player.ID}">
-            <div class="card-header h5">
+        <div class="card mb-3 shadow-sm border-light bg-dark wider-border" id="playerCart${player.ID}">
+            <div class="card-header h5 bg-dark text-light border-secondary">
                 ${player.name}
                 <cite class="text-secondary" id="playerNCards${player.ID}"> - ${player.nCards} cards</cite>
             </div>
-            <div class="card-body">
-                <h1 class="mb-0 big-text" id="playerCards${player.ID}"></h1>
+            <div class="card-body card-body-padding">
+                <h1 class="cards-text text-light" id="playerCards${player.ID}"></h1>
                 <div class="btn-group btn-block btn-group-sm mt-3 d-none" role="group" id="playerBtn${player.ID}">
-                    <button type="button" class="btn btn-outline-primary" name="${player.ID}" id="riseBtn${player.ID}">Rilancio</button>
-                    <button type="button" class="btn btn-outline-warning" name="${player.ID}" id="doubtBtn${player.ID}">Dubito</button>
+                    <button type="button" class="btn btn-primary" name="${player.ID}" id="riseBtn${player.ID}">Rilancio</button>
+                    <button type="button" class="btn btn-warning" name="${player.ID}" id="doubtBtn${player.ID}">Dubito</button>
                 </div>
                 <div class="btn-group btn-block btn-group-sm mt-3 d-none" role="group" id="dealerBtn${player.ID}">
-                    <button type="button" class="btn btn-outline-secondary" name="${player.ID}-DOWN" id="cardDownBtn${player.ID}">Meno Carte</button>
-                    <button type="button" class="btn btn-outline-secondary" name="${player.ID}-UP" id="cardUpBtn${player.ID}">Più Carte</button>
-                    <button type="button" class="btn btn-outline-danger" name="${player.ID}" id="zeroBtn${player.ID}">Zero</button>
+                    <button type="button" class="btn btn-info" name="${player.ID}-DOWN" id="cardDownBtn${player.ID}">Meno Carte</button>
+                    <button type="button" class="btn btn-info" name="${player.ID}-UP" id="cardUpBtn${player.ID}">Più Carte</button>
+                    <button type="button" class="btn btn-warning" name="${player.ID}" id="zeroBtn${player.ID}">Zero</button>
+                </div>
+                <div class="btn-group btn-block btn-group-sm mt-3 d-none" role="group" id="dealerBtn2${player.ID}">
                     <button type="button" class="btn btn-success" name="${player.ID}" id="starterBtn${player.ID}">Primo di mano</button>
                     <button type="button" class="btn btn-danger" name="${player.ID}" id="kickBtn${player.ID}">Elimina</button>
                 </div>
@@ -125,7 +141,7 @@ function addPlayerCard(player) {
     // Where to add card
     const rowDiv = document.getElementById('rowDiv')
     let childDiv = document.createElement('div')
-    childDiv.classList.add('col-md-6')
+    childDiv.classList.add('col-md-4')
     rowDiv.appendChild(childDiv)
 
     // Append
@@ -140,7 +156,7 @@ function addPlayerCard(player) {
                 document.getElementById(`doubtBtn${player.ID}`).addEventListener('click', doubtCallback)
             }
 
-            // TODO ideally these are active only for the dealer
+            // Activate for everyone, if dealer changes everything is ready
             document.getElementById(`cardUpBtn${player.ID}`).addEventListener('click', cardChangeCallback)
             document.getElementById(`cardDownBtn${player.ID}`).addEventListener('click', cardChangeCallback)
             document.getElementById(`zeroBtn${player.ID}`).addEventListener('click', zeroCallback)
@@ -159,18 +175,14 @@ function addPlayerCard(player) {
 function updatePlayerCard(player, cardRef, gameOn) {
     // Update current player turn
     if (player.hisTurn) {
-        cardRef.classList.remove('border-danger')
+        cardRef.classList.remove('border-danger', 'border-light')
         cardRef.classList.add('border-success')
-    } else {
-        cardRef.classList.remove('border-success')
-    }
-
-    // Il player has no cards
-    if (player.nCards === 0) {
-        cardRef.classList.remove('border-success')
+    } else if (player.nCards === 0) {
+        cardRef.classList.remove('border-success', 'border-light')
         cardRef.classList.add('border-danger')
     } else {
-        cardRef.classList.remove('border-danger')
+        cardRef.classList.remove('border-success', 'border-danger')
+        cardRef.classList.add('border-light')
     }
 
     // Number of cards count
@@ -180,6 +192,9 @@ function updatePlayerCard(player, cardRef, gameOn) {
     const playerBtn = document.getElementById(`playerBtn${player.ID}`)
     if (player.hisTurn && player.itsMe && gameOn) {
         playerBtn.classList.remove('d-none')
+            // Part of avoid double click
+        const riseBtn = document.getElementById(`riseBtn${player.ID}`)
+        riseBtn.classList.remove('disabled')
     } else { // Hide
         playerBtn.classList.add('d-none')
     }

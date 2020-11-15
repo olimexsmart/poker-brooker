@@ -67,7 +67,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                             totCards += player.nCards;
 
-                            // Admin button
+                            // Admin buttons
+                            let dealerBtn = document.querySelectorAll('*[id^="dealerBtn"]');
                             if (player.isDealer && player.itsMe) {
                                 adminBtn.classList.remove('d-none')
                                     // Toggle button function
@@ -82,7 +83,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                 }
 
                                 // Switch on-off admin buttons on players
-                                let dealerBtn = document.querySelectorAll('*[id^="dealerBtn"]');
                                 if (text.gameOn) {
                                     dealerBtn.forEach(e => {
                                         e.classList.add('d-none')
@@ -92,10 +92,15 @@ document.addEventListener('DOMContentLoaded', function() {
                                         e.classList.remove('d-none')
                                     })
                                 }
+                            } else if (!player.isDealer && player.itsMe) { // Just to be sure
+                                adminBtn.classList.add('d-none')
+                                dealerBtn.forEach(e => {
+                                    e.classList.add('d-none')
+                                })
                             }
-                            
+
                             // Save admin admin
-                            if (player.isDealer) 
+                            if (player.isDealer)
                                 adminName = player.name
 
                             // Add card if not already present
@@ -119,9 +124,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
 
                         // Updating game info
-                        gameInfoP.innerText = `Carte: ${totCards}
-                        Giocatori: ${text.players.length}
-                        Mazziere: ${adminName}
+                        gameInfoP.innerHTML = `Carte: ${totCards} &mdash; 
+                        Giocatori: ${text.players.length} <br>
+                        Mazziere: ${adminName} &mdash;
                         Round: ${text.gameOn ? 'In Corso' : 'In attesa'}`
                     })
                 } else {

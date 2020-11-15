@@ -57,7 +57,6 @@ if ($roomID1 !== $roomID2) {
     die("Players not in the same room");
 }
 
-
 // Set player cards to zero
 $query = "UPDATE players SET nCards = 0 WHERE ID = $playerID";
 if (!$sql->query($query)) {

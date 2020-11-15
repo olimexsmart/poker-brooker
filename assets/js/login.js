@@ -7,13 +7,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const errEnterAl = document.getElementById('errEnter')
     const nStartCardsIn = document.getElementById('nStartCards')
 
-    function pressEnterToClick(event) {    
+    function pressEnterToClick(event) {
         if (event.keyCode == 13) {
             const e = new Event('click')
             enterRoomBtn.dispatchEvent(e)
         }
     }
-    
+
     roomCodeIn.addEventListener('keydown', pressEnterToClick)
     playerNameIn.addEventListener('keydown', pressEnterToClick)
 
@@ -57,6 +57,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     response.text().then(text => {
                         errEnterAl.innerText = text
+                        errEnterAl.classList.remove('d-none')
+                        errEnterAl.classList.remove('alert-success')
+                        errEnterAl.classList.add('alert-danger')
                     })
                 }
             })

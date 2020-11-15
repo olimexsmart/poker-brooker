@@ -59,25 +59,26 @@ while ($resArr = $result->fetch_assoc()) {
     }
     $i++;
 }
-
+echo $currPlayer . '#';
 // Find next with card in hand
 $newTurn = -1;
 for ($i = $currPlayer + 1; $i < count($posArr); $i++) {
     if ($posArr[$i]['nCards'] != 0) {
-        $newTurn = $i;
+        $newTurn = (int) $posArr[$i]['position'];
         break;
     }
 }
-
+echo $newTurn . '#';
 // Could be that we need to search from beginning
 if ($newTurn === -1) {
     for ($i = 0; $i < count($posArr); $i++) {
         if ($posArr[$i]['nCards'] != 0) {
-            $newTurn = $i;
+            $newTurn = (int) $posArr[$i]['position'];
             break;
         }
     }
 }
+echo $newTurn . '#';
 
 // Update turn
 $query = "UPDATE rooms SET currentTurn = $newTurn WHERE ID = $roomID";
