@@ -6,16 +6,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const errAlertAl = document.getElementById('errAlert')
 
     // Set room code label
-    roomCodeH3.innerText = localStorage.getItem('roomCode')
+    roomCodeH3.innerText = sessionStorage.getItem('roomCode')
 
     // Exit button
     exitBtn.addEventListener('click', () => {
-        fetch('../API/exitRoom.php?playerID=' + localStorage.getItem('playerID'))
+        fetch('../API/exitRoom.php?playerID=' + sessionStorage.getItem('playerID'))
             .then(response => {
                 if (response.ok) {
                     response.text().then(text => {
-                        localStorage.removeItem('playerID')
-                        window.history.back();
+                        sessionStorage.removeItem('playerID')
+                        window.location.href = location.origin + '/pokerpolacco/'
                     })
                 } else {
                     response.text().then(text => {
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Depends on current button state
         if (adminBtn.classList.contains('btn-danger')) {
             // Request card reveal - game off
-            fetch('../API/doubt.php?playerID=' + localStorage.getItem('playerID'))
+            fetch('../API/doubt.php?playerID=' + sessionStorage.getItem('playerID'))
                 .then(response => {
                     if (!response.ok) {
                         response.text().then(text => {
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
         } else {
             // Request card distribution - game on
-            fetch('../API/distributeCards.php?dealerID=' + localStorage.getItem('playerID'))
+            fetch('../API/distributeCards.php?dealerID=' + sessionStorage.getItem('playerID'))
                 .then(response => {
                     if (!response.ok) {
                         response.text().then(text => {
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Periodically update player cards
     setInterval(() => {
-        fetch('../API/loadPlayers.php?playerID=' + localStorage.getItem('playerID'))
+        fetch('../API/loadPlayers.php?playerID=' + sessionStorage.getItem('playerID'))
             .then(response => {
                 if (response.ok) {
                     response.json().then(text => {
@@ -127,7 +127,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         gameInfoP.innerHTML = `Carte: ${totCards} &mdash; 
                         Giocatori: ${text.players.length} <br>
                         Mazziere: ${adminName} &mdash;
-                        Round: ${text.gameOn ? 'In Corso' : 'In attesa'}`
+                        Round: <b>${text.gameOn ? '<span style="color: greenyellow;">In Corso &#x2691;</span>' 
+                                                : '<span style="color: darkred;">In attesa &#x2612;</span>'}</b>`
                     })
                 } else {
                     response.text().then(text => {

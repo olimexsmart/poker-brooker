@@ -1,7 +1,7 @@
 function riseCallback() {
     // Avoid double click
     if (!this.classList.contains('disabled')) {
-        fetch('../API/rise.php?playerID=' + localStorage.getItem('playerID'))
+        fetch('../API/rise.php?playerID=' + sessionStorage.getItem('playerID'))
             .then(response => {
                 if (!response.ok) {
                     response.text().then(text => {
@@ -16,7 +16,7 @@ function riseCallback() {
 }
 
 function doubtCallback() {
-    fetch('../API/doubt.php?playerID=' + localStorage.getItem('playerID'))
+    fetch('../API/doubt.php?playerID=' + sessionStorage.getItem('playerID'))
         .then(response => {
             if (!response.ok) {
                 response.text().then(text => {
@@ -31,7 +31,7 @@ function doubtCallback() {
 function starterCallback() {
     let playerID = parseInt(this.name)
 
-    fetch(`../API/changeNextPlayer.php?dealerID=${localStorage.getItem('playerID')}
+    fetch(`../API/changeNextPlayer.php?dealerID=${sessionStorage.getItem('playerID')}
             &playerID=${playerID}`)
         .then(response => {
             if (!response.ok) {
@@ -54,7 +54,7 @@ function cardChangeCallback() {
         bindFunc()
     }
 
-    fetch(`../API/changePlayerNCards.php?dealerID=${localStorage.getItem('playerID')}
+    fetch(`../API/changePlayerNCards.php?dealerID=${sessionStorage.getItem('playerID')}
             &playerID=${playerID}
             &up=${up}`)
         .then(response => {
@@ -71,7 +71,7 @@ function cardChangeCallback() {
 function zeroCallback() {
     let playerID = parseInt(this.name)
 
-    fetch(`../API/changeCardsZero.php?dealerID=${localStorage.getItem('playerID')}
+    fetch(`../API/changeCardsZero.php?dealerID=${sessionStorage.getItem('playerID')}
             &playerID=${playerID}`)
         .then(response => {
             if (!response.ok) {

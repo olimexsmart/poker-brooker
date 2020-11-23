@@ -60,7 +60,8 @@ do {
     // If the error does not contain 'theOrder' break cycle
     if ($status !== true && strpos($sql->error, 'theOrder') === false) {
         http_response_code(506);
-        die("Error: " . $query . " " . $sql->error . "\n");
+        //die("Error: " . $query . " " . $sql->error . "\n");
+        die("Name already taken.");
     } /*else if ($status !== true) {
         echo "Incremented position to: " . $position . "\n";
     }*/
@@ -74,7 +75,8 @@ do {
 
 if(!$status) {
     http_response_code(500);
-    die("Could not find suitable position for player. Possible max platers reached");
+    die("Could not find suitable position for player. 
+        Possible max players reached.");
 }
 
 echo $sql->insert_id;

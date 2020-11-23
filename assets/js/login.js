@@ -44,14 +44,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     enterRoomBtn.addEventListener('click', () => {
         let playerName = playerNameIn.value
+
+        // Avoid no-name players
+        if (playerName.length == 0) {
+            errEnterAl.innerText = "Inserire nome giocatore"
+            errEnterAl.classList.remove('d-none')
+            errEnterAl.classList.remove('alert-success')
+            errEnterAl.classList.add('alert-danger')
+            return
+        } else if (playerName.length > 19) { // Avoid name to long
+            playerName = playerName.substring(0, 19);
+        }
+
         let roomCode = roomCodeIn.value.toUpperCase()
 
         fetch(`API/enterRoom.php?playerName=${playerName}&roomCode=${roomCode}`)
             .then(response => {
                 if (response.ok) {
                     response.text().then(text => {
-                        localStorage.setItem('playerID', text)
-                        localStorage.setItem('roomCode', roomCode)
+                        sessionStorage.setItem('playerID', text)
+                        sessionStorage.setItem('roomCode', roomCode)
                         window.location.href = location.pathname + 'game/game.html'
                     })
                 } else {
