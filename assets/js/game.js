@@ -1,9 +1,10 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const roomCodeH3 = document.getElementById('roomCodeH3')
     const exitBtn = document.getElementById('exitBtn')
     const gameInfoP = document.getElementById('gameInfoP')
     const adminBtn = document.getElementById('adminBtn')
     const errAlertAl = document.getElementById('errAlert')
+    const shuffleBtn = document.getElementById('shuffleBtn')
 
     // Set room code label
     roomCodeH3.innerText = sessionStorage.getItem('roomCode')
@@ -53,6 +54,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     })
 
+    shuffleBtn.addEventListener('click', () => {
+        fetch(`../API/shufflePlayers.php?dealerID=${sessionStorage.getItem('playerID')}`)
+            .then(response => {
+                if (!response.ok) {
+                    response.text().then(text => {
+                        const errAlertAl = document.getElementById('errAlert')
+                        errAlertAl.innerText = text
+                        errAlertAl.classList.remove('d-none')
+                    })
+                }
+            })
+    })
+
     // Periodically update player cards
     setInterval(() => {
         fetch('../API/loadPlayers.php?playerID=' + sessionStorage.getItem('playerID'))
@@ -71,7 +85,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             let dealerBtn = document.querySelectorAll('*[id^="dealerBtn"]');
                             if (player.isDealer && player.itsMe) {
                                 adminBtn.classList.remove('d-none')
-                                    // Toggle button function
+                                shuffleBtn.classList.remove('d-none')
+                                // Toggle button function
                                 if (text.gameOn) {
                                     adminBtn.classList.remove('btn-success')
                                     adminBtn.classList.add('btn-danger')
@@ -94,6 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 }
                             } else if (!player.isDealer && player.itsMe) { // Just to be sure
                                 adminBtn.classList.add('d-none')
+                                shuffleBtn.classList.add('d-none')
                                 dealerBtn.forEach(e => {
                                     e.classList.add('d-none')
                                 })
@@ -127,8 +143,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         gameInfoP.innerHTML = `Carte: ${totCards} &mdash; 
                         Giocatori: ${text.players.length} <br>
                         Mazziere: ${adminName} &mdash;
-                        Round: <b>${text.gameOn ? '<span style="color: greenyellow;">In Corso &#x2691;</span>' 
-                                                : '<span style="color: darkred;">In attesa &#x2612;</span>'}</b>`
+                        Round: <b>${text.gameOn ? '<span style="color: greenyellow;">In Corso &#x2691;</span>'
+                                : '<span style="color: darkred;">In attesa &#x2612;</span>'}</b>`
                     })
                 } else {
                     response.text().then(text => {

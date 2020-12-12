@@ -61,6 +61,7 @@ while ($resArr = $result->fetch_assoc()) {
     $info['name'] = $resArr['playerName'];
     $info['nCards'] = (int) $resArr['nCards'];
     $info['isDealer'] = $resArr['dealer'] == 1 ? true : false;
+    $info['position'] = (int) $resArr['position'];
 
     // If it's me
     if ($resArr['ID'] == $playerID) {

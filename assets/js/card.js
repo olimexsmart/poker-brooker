@@ -172,16 +172,24 @@ function addPlayerCard(player) {
     }, 100)
 }
 
+function removeClassMatch(element, classSubstr) {
+    element.classList.forEach(item=>{
+        if(item.startsWith(classSubstr)) {
+            element.classList.remove(item) ;
+        }
+    })
+  }
+
 function updatePlayerCard(player, cardRef, gameOn) {
     // Update current player turn
     if (player.hisTurn) {
-        cardRef.classList.remove('border-danger', 'border-light')
+        removeClassMatch(cardRef, 'border')
         cardRef.classList.add('border-success')
     } else if (player.nCards === 0) {
-        cardRef.classList.remove('border-success', 'border-light')
+        removeClassMatch(cardRef, 'border')
         cardRef.classList.add('border-danger')
     } else {
-        cardRef.classList.remove('border-success', 'border-danger')
+        removeClassMatch(cardRef, 'border')
         cardRef.classList.add('border-light')
     }
 
@@ -206,4 +214,8 @@ function updatePlayerCard(player, cardRef, gameOn) {
     } else { // Show actual cards
         playerCards.innerHTML = player.cards.join('')
     }
+
+    // Update card position
+    removeClassMatch(cardRef.parentElement, 'order')
+    cardRef.parentElement.classList.add('order-' + player.position)
 }
