@@ -87,11 +87,11 @@ function zeroCallback() {
     let bindFunc = starterCallback.bind(this)
     bindFunc()
 
-    // This is ugly but ensure that the calls are subsequent
+    // This is ugly but should ensure that the calls are subsequent
     setTimeout(() => {
         bindFunc = riseCallback.bind(this)
         bindFunc()
-    }, 333)
+    }, 500)
 }
 
 
@@ -99,6 +99,22 @@ function kickCallback() {
     let playerID = parseInt(this.name)
 
     fetch('../API/exitRoom.php?playerID=' + playerID)
+        .then(response => {
+            if (!response.ok) {
+                response.text().then(text => {
+                    const errAlertAl = document.getElementById('errAlert')
+                    errAlertAl.innerText = text
+                    errAlertAl.classList.remove('d-none')
+                })
+            }
+        })
+}
+
+function dealerCallback() {
+    let playerID = parseInt(this.name)
+
+    fetch(`../API/changeDealer.php?dealerID=${sessionStorage.getItem('playerID')}
+            &playerID=${playerID}`)
         .then(response => {
             if (!response.ok) {
                 response.text().then(text => {
@@ -131,6 +147,7 @@ function addPlayerCard(player) {
                     <button type="button" class="btn btn-warning" name="${player.ID}" id="zeroBtn${player.ID}">Zero</button>
                 </div>
                 <div class="btn-group btn-block btn-group-sm mt-3 d-none" role="group" id="dealerBtn2${player.ID}">
+                    <button type="button" class="btn btn-warning" name="${player.ID}" id="newDealerBtn${player.ID}">Fai dealer</button>
                     <button type="button" class="btn btn-success" name="${player.ID}" id="starterBtn${player.ID}">Primo di mano</button>
                     <button type="button" class="btn btn-danger" name="${player.ID}" id="kickBtn${player.ID}">Elimina</button>
                 </div>
@@ -162,6 +179,7 @@ function addPlayerCard(player) {
             document.getElementById(`zeroBtn${player.ID}`).addEventListener('click', zeroCallback)
             document.getElementById(`starterBtn${player.ID}`).addEventListener('click', starterCallback)
             document.getElementById(`kickBtn${player.ID}`).addEventListener('click', kickCallback)
+            document.getElementById(`newDealerBtn${player.ID}`).addEventListener('click', dealerCallback)
 
             clearInterval(handle)
         } catch (e) {
