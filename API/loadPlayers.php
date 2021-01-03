@@ -92,7 +92,7 @@ while ($resArr = $result->fetch_assoc()) {
     // Load cards
     if ($gameOn == 0 || $nCards == 0) { // Of all players if game is off
         $thisPlayerID = $resArr['ID'];  // Or this request was sent by a player who lost
-        $query = "SELECT d.cardHexCode FROM deck AS d 
+        $query = "SELECT d.cardHexCode, d.cardName FROM deck AS d 
                 JOIN hands AS h 
                 ON d.ID = h.cardID 
                 WHERE h.playerID = $thisPlayerID";
@@ -104,11 +104,11 @@ while ($resArr = $result->fetch_assoc()) {
 
         $cards = array();
         while ($resArrC = $resultC->fetch_row()) {
-            array_push($cards, $resArrC[0]);
+            array_push($cards, $resArrC);
         }
         $info['cards'] = $cards;
     } else if ($resArr['ID'] == $playerID) { // Just me if game is on
-        $query = "SELECT d.cardHexCode FROM deck AS d 
+        $query = "SELECT d.cardHexCode, d.cardName FROM deck AS d 
                 JOIN hands AS h 
                 ON d.ID = h.cardID 
                 WHERE h.playerID = $playerID";
@@ -120,7 +120,7 @@ while ($resArr = $result->fetch_assoc()) {
 
         $cards = array();
         while ($resArrC = $resultC->fetch_row()) {
-            array_push($cards, $resArrC[0]);
+            array_push($cards, $resArrC);
         }
         $info['cards'] = $cards;
     } else { // No cards if game is on and it's not me

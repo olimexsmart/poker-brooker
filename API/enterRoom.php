@@ -13,6 +13,7 @@ if ($sql->connect_error) {
 // Retrieve inputs
 $roomCode = $_GET['roomCode'];
 $playerName = $_GET['playerName'];
+$spectator = (int) $_GET['spectator'];
 
 // Get ID of the room with that code
 $query = "SELECT ID, nStartCards FROM rooms where code = '$roomCode'";
@@ -24,7 +25,10 @@ if (!$result = $sql->query($query)) {
 if ($result->num_rows > 0) {
     $resArr = $result->fetch_assoc();
     $roomID = $resArr['ID'];
-    $nStartCards = $resArr['nStartCards'];
+    if ($spectator)
+        $nStartCards = 0;
+    else
+        $nStartCards = $resArr['nStartCards'];
 } else {
     http_response_code(404);
     die("Room code not valid");
@@ -73,7 +77,7 @@ do {
     // Increment position until is valid
 } while ($status !== true);
 
-if(!$status) {
+if (!$status) {
     http_response_code(500);
     die("Could not find suitable position for player. 
         Possible max players reached.");

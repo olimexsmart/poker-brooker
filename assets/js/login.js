@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const playerNameIn = document.getElementById('playerName')
     const newRoomCodeAl = document.getElementById('newRoomCode')
     const errEnterAl = document.getElementById('errEnter')
-    const nStartCardsIn = document.getElementById('nStartCards')
+    // const nStartCardsIn = document.getElementById('nStartCards')
+    const spectatorCk = document.getElementById('spectator')
 
     function pressEnterToClick(event) {
         if (event.keyCode == 13) {
@@ -43,7 +44,8 @@ document.addEventListener('DOMContentLoaded', function() {
     })
 
     enterRoomBtn.addEventListener('click', () => {
-        let playerName = playerNameIn.value
+        // Just alfanumeric entries
+        let playerName = playerNameIn.value.replace(/[^a-z0-9]/gi,'')
 
         // Avoid no-name players
         if (playerName.length == 0) {
@@ -57,8 +59,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         let roomCode = roomCodeIn.value.toUpperCase()
+        let spectator = spectatorCk.checked ? 1 : 0;
 
-        fetch(`API/enterRoom.php?playerName=${playerName}&roomCode=${roomCode}`)
+        fetch(`API/enterRoom.php?playerName=${playerName}&roomCode=${roomCode}&spectator=${spectator}`)
             .then(response => {
                 if (response.ok) {
                     response.text().then(text => {

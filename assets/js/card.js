@@ -190,25 +190,30 @@ function addPlayerCard(player) {
     }, 100)
 }
 
+
 function removeClassMatch(element, classSubstr) {
-    element.classList.forEach(item=>{
-        if(item.startsWith(classSubstr)) {
-            element.classList.remove(item) ;
+    element.classList.forEach(item => {
+        if (item.startsWith(classSubstr)) {
+            element.classList.remove(item);
         }
     })
-  }
+}
+
 
 function updatePlayerCard(player, cardRef, gameOn) {
     // Update current player turn
+    removeClassMatch(cardRef, 'border')
+    removeClassMatch(cardRef.children[0], 'border')
+
     if (player.hisTurn) {
-        removeClassMatch(cardRef, 'border')
         cardRef.classList.add('border-success')
+        cardRef.children[0].classList.add('border-success')
     } else if (player.nCards === 0) {
-        removeClassMatch(cardRef, 'border')
         cardRef.classList.add('border-danger')
+        cardRef.children[0].classList.add('border-danger')
     } else {
-        removeClassMatch(cardRef, 'border')
         cardRef.classList.add('border-light')
+        cardRef.children[0].classList.add('border-light')
     }
 
     // Number of cards count
@@ -218,7 +223,7 @@ function updatePlayerCard(player, cardRef, gameOn) {
     const playerBtn = document.getElementById(`playerBtn${player.ID}`)
     if (player.hisTurn && player.itsMe && gameOn) {
         playerBtn.classList.remove('d-none')
-            // Part of avoid double click
+        // Part of avoid double click
         const riseBtn = document.getElementById(`riseBtn${player.ID}`)
         riseBtn.classList.remove('disabled')
     } else { // Hide
@@ -230,7 +235,20 @@ function updatePlayerCard(player, cardRef, gameOn) {
     if (player.cards == null) { // Show covered
         playerCards.innerHTML = '&#x1F0A0;'.repeat(player.nCards)
     } else { // Show actual cards
-        playerCards.innerHTML = player.cards.join('')
+        player.cards.sort((a, b) => {
+            if (a[1] === b[1]) {
+                return 0;
+            }
+            else {
+                return (a[1] < b[1]) ? -1 : 1;
+            }
+        })
+
+        let str = ""
+        for(let i = 0; i < player.cards.length; i++) {
+            str += player.cards[i][0]
+        }
+        playerCards.innerHTML = str
     }
 
     // Update card position
