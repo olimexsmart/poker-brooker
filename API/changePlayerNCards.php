@@ -1,14 +1,8 @@
 <?php
 
-require 'login.php';
+require 'commonCode.php';
 
-// Create connection
-$sql = new mysqli($serverName, $username, $password, $dbname);
-// Check connection
-if ($sql->connect_error) {
-    http_response_code(502);
-    die("Connection failed: " . $sql->connect_error);
-}
+$sql = initSQLConnection();
 
 // Get input args
 $dealerID = $_GET['dealerID'];
@@ -17,10 +11,7 @@ $up = (int) $_GET['up'];
 
 // Check if is really a dealer
 $query = "SELECT roomID, dealer FROM players WHERE ID = $dealerID";
-if (!$result = $sql->query($query)) {
-    http_response_code(506);
-    die("Error: " . $query . " " . $sql->error . "\n");
-}
+$result = queryWithResult($sql, $query);
 
 if ($result->num_rows > 0) {
     $resArr = $result->fetch_assoc();
@@ -39,10 +30,7 @@ if ($isDealer === 0) {
 
 // Get player info
 $query = "SELECT roomID, nCards FROM players WHERE ID = $playerID";
-if (!$result = $sql->query($query)) {
-    http_response_code(506);
-    die("Error: " . $query . " " . $sql->error . "\n");
-}
+$result = queryWithResult($sql, $query);
 
 if ($result->num_rows > 0) {
     $resArr = $result->fetch_assoc();
@@ -70,10 +58,7 @@ if ($nCards < 0)
 
 // Apply changes
 $query = "UPDATE players SET nCards = $nCards WHERE ID = $playerID";
-if (!$sql->query($query)) {
-    http_response_code(506);
-    die("Error: " . $query . " " . $sql->error . "\n");
-}
+$result = queryWithResult($sql, $query);
 
 echo "DONE";
 $sql->close();

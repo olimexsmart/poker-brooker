@@ -1,14 +1,8 @@
 <?php
 
-require 'login.php';
+require 'commonCode.php';
 
-// Create connection
-$sql = new mysqli($serverName, $username, $password, $dbname);
-// Check connection
-if ($sql->connect_error) {
-    http_response_code(502);
-    die("Connection failed: " . $sql->connect_error);
-}
+$sql = initSQLConnection();
 
 // Retrieve inputs
 $roomCode = $_GET['roomCode'];
@@ -17,10 +11,7 @@ $spectator = (int) $_GET['spectator'];
 
 // Get ID of the room with that code
 $query = "SELECT ID, nStartCards FROM rooms where code = '$roomCode'";
-if (!$result = $sql->query($query)) {
-    http_response_code(506);
-    die("Error: " . $query . " " . $sql->error . "\n");
-}
+$result = queryWithResult($sql, $query);
 
 if ($result->num_rows > 0) {
     $resArr = $result->fetch_assoc();
@@ -36,10 +27,7 @@ if ($result->num_rows > 0) {
 
 // Get current max position
 $query = "SELECT position FROM players WHERE roomID = $roomID ORDER BY position DESC LIMIT 1";
-if (!$result = $sql->query($query)) {
-    http_response_code(506);
-    die("Error: " . $query . " " . $sql->error . "\n");
-}
+$result = queryWithResult($sql, $query);
 
 // Interested in just one result so no while necessary
 if ($resArr = $result->fetch_assoc()) {
@@ -58,7 +46,7 @@ do {
 
     $query = "INSERT INTO players (ID, roomID, playerName, position, nCards, dealer)
     VALUES(NULL, $roomID, '$playerName', $position, $nStartCards, $dealer)";
-    $status = $sql->query($query);
+    $status = $sql->query($query);   
     $position++;
 
     // If the error does not contain 'theOrder' break cycle
@@ -83,14 +71,11 @@ if (!$status) {
         Possible max players reached.");
 }
 
+// Communicating player ID to front end
 echo $sql->insert_id;
-
 
 // Insert player into master record
 $query = "INSERT INTO record (playerName) VALUES('$playerName')";
-if (!$sql->query($query)) {
-    http_response_code(506);
-    die("Error: " . $query . " " . $sql->error . "\n");
-}
+queryWithoutResult($sql, $query);
 
 $sql->close();

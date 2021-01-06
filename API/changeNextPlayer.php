@@ -1,14 +1,8 @@
 <?php
 
-require 'login.php';
+require 'commonCode.php';
 
-// Create connection
-$sql = new mysqli($serverName, $username, $password, $dbname);
-// Check connection
-if ($sql->connect_error) {
-    http_response_code(502);
-    die("Connection failed: " . $sql->connect_error);
-}
+$sql = initSQLConnection();
 
 // Get input args
 $dealerID = $_GET['dealerID'];
@@ -16,10 +10,7 @@ $playerID = $_GET['playerID'];
 
 // Check if is really a dealer
 $query = "SELECT roomID, dealer FROM players WHERE ID = $dealerID";
-if (!$result = $sql->query($query)) {
-    http_response_code(506);
-    die("Error: " . $query . " " . $sql->error . "\n");
-}
+$result = queryWithResult($sql, $query);
 
 if ($result->num_rows > 0) {
     $resArr = $result->fetch_assoc();
@@ -38,10 +29,7 @@ if ($isDealer === 0) {
 
 // Get player info
 $query = "SELECT roomID, position FROM players WHERE ID = $playerID";
-if (!$result = $sql->query($query)) {
-    http_response_code(506);
-    die("Error: " . $query . " " . $sql->error . "\n");
-}
+$result = queryWithResult($sql, $query);
 
 if ($result->num_rows > 0) {
     $resArr = $result->fetch_assoc();
@@ -60,10 +48,7 @@ if ($roomID1 !== $roomID2) {
 
 // Apply changes
 $query = "UPDATE rooms SET currentTurn = $position WHERE ID = $roomID1";
-if (!$sql->query($query)) {
-    http_response_code(506);
-    die("Error: " . $query . " " . $sql->error . "\n");
-}
+queryWithoutResult($sql, $query);
 
 echo "DONE";
 $sql->close();

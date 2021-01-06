@@ -1,24 +1,15 @@
 <?php
 
-require 'login.php';
+require 'commonCode.php';
 
-// Create connection
-$sql = new mysqli($serverName, $username, $password, $dbname);
-// Check connection
-if ($sql->connect_error) {
-    http_response_code(502);
-    die("Connection failed: " . $sql->connect_error);
-}
+$sql = initSQLConnection();
 
 // Get input args
 $playerID = $_GET['playerID'];
 
 // Get player info
 $query = "SELECT roomID FROM players WHERE ID = $playerID";
-if (!$result = $sql->query($query)) {
-    http_response_code(506);
-    die("Error: " . $query . " " . $sql->error . "\n");
-}
+$result = queryWithResult($sql, $query);
 
 if ($result->num_rows > 0) {
     $resArr = $result->fetch_assoc();
@@ -30,10 +21,8 @@ if ($result->num_rows > 0) {
 
 // Get current turn value
 $query = "SELECT currentTurn FROM rooms WHERE ID = $roomID";
-if (!$result = $sql->query($query)) {
-    http_response_code(506);
-    die("Error: " . $query . " " . $sql->error . "\n");
-}
+$result = queryWithResult($sql, $query);
+
 if ($result->num_rows > 0) {
     $resArr = $result->fetch_assoc();
     $currentTurn = (int) $resArr['currentTurn'];
@@ -43,10 +32,7 @@ if ($result->num_rows > 0) {
 
 // Get all the player card and position
 $query = "SELECT nCards, position FROM players WHERE roomID = $roomID ORDER BY position ASC";
-if (!$result = $sql->query($query)) {
-    http_response_code(506);
-    die("Error: " . $query . " " . $sql->error . "\n");
-}
+$result = queryWithResult($sql, $query);
 
 $posArr = array();
 $currPlayer = 0;
@@ -82,10 +68,7 @@ echo $newTurn . '#';
 
 // Update turn
 $query = "UPDATE rooms SET currentTurn = $newTurn WHERE ID = $roomID";
-if (!$sql->query($query)) {
-    http_response_code(506);
-    die("Error: " . $query . " " . $sql->error . "\n");
-}
+queryWithoutResult($sql, $query);
 
 echo "DONE";
 $sql->close();

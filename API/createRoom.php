@@ -1,14 +1,8 @@
 <?php
 
-require 'login.php';
+require 'commonCode.php';
 
-// Create connection
-$sql = new mysqli($serverName, $username, $password, $dbname);
-// Check connection
-if ($sql->connect_error) {
-    http_response_code(502);
-    die("Connection failed: " . $sql->connect_error);
-}
+$sql = initSQLConnection();
 
 // Retrieve inputs
 $nStartCards = $_GET['nStartCards'];

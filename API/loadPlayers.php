@@ -1,24 +1,15 @@
 <?php
 
-require 'login.php';
+require 'commonCode.php';
 
-// Create connection
-$sql = new mysqli($serverName, $username, $password, $dbname);
-// Check connection
-if ($sql->connect_error) {
-    http_response_code(502);
-    die("Connection failed: " . $sql->connect_error);
-}
+$sql = initSQLConnection();
 
 // Get input args
 $playerID = $_GET['playerID'];
 
 // Get player info
 $query = "SELECT roomID, dealer, nCards FROM players WHERE ID = $playerID";
-if (!$result = $sql->query($query)) {
-    http_response_code(506);
-    die("Error: " . $query . " " . $sql->error . "\n");
-}
+$result = queryWithResult($sql, $query);
 
 if ($result->num_rows > 0) {
     $resArr = $result->fetch_assoc();
@@ -33,10 +24,7 @@ if ($result->num_rows > 0) {
 
 // Get if game is on
 $query = "SELECT gameOn, currentTurn FROM rooms WHERE ID = $roomID";
-if (!$result = $sql->query($query)) {
-    http_response_code(506);
-    die("Error: " . $query . " " . $sql->error . "\n");
-}
+$result = queryWithResult($sql, $query);
 
 if ($result->num_rows > 0) {
     $resArr = $result->fetch_assoc();
@@ -49,10 +37,7 @@ if ($result->num_rows > 0) {
 
 // Get information about all the players
 $query = "SELECT * FROM players WHERE roomID = $roomID ORDER BY position";
-if (!$result = $sql->query($query)) {
-    http_response_code(506);
-    die("Error: " . $query . " " . $sql->error . "\n");
-}
+$result = queryWithResult($sql, $query);
 
 $players = array();
 while ($resArr = $result->fetch_assoc()) {
@@ -97,10 +82,7 @@ while ($resArr = $result->fetch_assoc()) {
                 ON d.ID = h.cardID 
                 WHERE h.playerID = $thisPlayerID";
 
-        if (!$resultC = $sql->query($query)) {
-            http_response_code(506);
-            die("Error: " . $query . " " . $sql->error . "\n");
-        }
+        $resultC = queryWithResult($sql, $query);
 
         $cards = array();
         while ($resArrC = $resultC->fetch_row()) {
@@ -113,10 +95,7 @@ while ($resArr = $result->fetch_assoc()) {
                 ON d.ID = h.cardID 
                 WHERE h.playerID = $playerID";
 
-        if (!$resultC = $sql->query($query)) {
-            http_response_code(506);
-            die("Error: " . $query . " " . $sql->error . "\n");
-        }
+        $resultC = queryWithResult($sql, $query);
 
         $cards = array();
         while ($resArrC = $resultC->fetch_row()) {

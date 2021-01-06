@@ -1,24 +1,15 @@
 <?php
 
-require 'login.php';
+require 'commonCode.php';
 
-// Create connection
-$sql = new mysqli($serverName, $username, $password, $dbname);
-// Check connection
-if ($sql->connect_error) {
-    http_response_code(502);
-    die("Connection failed: " . $sql->connect_error);
-}
+$sql = initSQLConnection();
 
 // Get input args
 $playerID = $_GET['playerID'];
 
 // Get player info
 $query = "SELECT roomID FROM players WHERE ID = $playerID";
-if (!$result = $sql->query($query)) {
-    http_response_code(506);
-    die("Error: " . $query . " " . $sql->error . "\n");
-}
+$result = queryWithResult($sql, $query);
 
 if ($result->num_rows > 0) {
     $resArr = $result->fetch_assoc();
@@ -29,10 +20,7 @@ if ($result->num_rows > 0) {
 }
 
 $query = "UPDATE rooms SET gameOn = 0 WHERE ID = $roomID";
-if (!$sql->query($query)) {
-    http_response_code(506);
-    die("Error: " . $query . " " . $sql->error . "\n");
-}
+queryWithoutResult($sql, $query);
 
 echo "DONE";
 $sql->close();

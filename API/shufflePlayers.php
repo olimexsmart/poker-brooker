@@ -1,24 +1,15 @@
 <?php
 
-require 'login.php';
+require 'commonCode.php';
 
-// Create connection
-$sql = new mysqli($serverName, $username, $password, $dbname);
-// Check connection
-if ($sql->connect_error) {
-    http_response_code(502);
-    die("Connection failed: " . $sql->connect_error);
-}
+$sql = initSQLConnection();
 
 // Get input args
 $dealerID = $_GET['dealerID'];
 
 // Check if is really a dealer
 $query = "SELECT roomID, dealer FROM players WHERE ID = $dealerID";
-if (!$result = $sql->query($query)) {
-    http_response_code(506);
-    die("Error: " . $query . " " . $sql->error . "\n");
-}
+$result = queryWithResult($sql, $query);
 
 if ($result->num_rows > 0) {
     $resArr = $result->fetch_assoc();
@@ -42,10 +33,7 @@ $sql->begin_transaction();
 try {
     // Get IDs of the players in this room
     $query = "SELECT ID FROM players WHERE roomid = $roomID";
-    if (!$result = $sql->query($query)) {
-        http_response_code(506);
-        die("Error: " . $query . " " . $sql->error . "\n");
-    }
+    $result = queryWithResult($sql, $query);
     $playersIDs = $result->fetch_all();
 
 
@@ -55,10 +43,7 @@ try {
         $pos = $numbers[$i];
         $ID = (int) $playersIDs[$i][0];
         $query = "UPDATE players SET position = $pos WHERE ID = $ID";
-        if (!$sql->query($query)) {
-            http_response_code(506);
-            die("Error: " . $query . " " . $sql->error . "\n");
-        }
+        $result = queryWithResult($sql, $query);
     }
 
     // Generate array with sequence of possible positions
@@ -70,10 +55,7 @@ try {
         $pos = $numbers[$i];
         $ID = (int) $playersIDs[$i][0];
         $query = "UPDATE players SET position = $pos WHERE ID = $ID";
-        if (!$sql->query($query)) {
-            http_response_code(506);
-            die("Error: " . $query . " " . $sql->error . "\n");
-        }
+        $result = queryWithResult($sql, $query);
     }
 
     $sql->commit();
